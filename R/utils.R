@@ -27,10 +27,12 @@ parse_interface <- function(interface, call = caller_env()) {
     interface <- "replace"
   }
 
-  if (isTRUE(
-    length(interface) != 1 ||
-    !interface %in% supported_interfaces
-  )) {
+  if (
+    isTRUE(
+      length(interface) != 1 ||
+        !interface %in% supported_interfaces
+    )
+  ) {
     cli::cli_abort(
       "{.arg interface} should be one of {.or {.val {supported_interfaces}}},
        not {.obj_type_friendly {interface}}.",
@@ -42,3 +44,18 @@ parse_interface <- function(interface, call = caller_env()) {
 }
 
 supported_interfaces <- c("replace", "prefix", "suffix")
+
+is_positron <- function() {
+  Sys.getenv("POSITRON") == "1"
+}
+
+in_dot_r_file <- function(context) {
+  identical(tolower(tools::file_ext(context$path)), "r")
+}
+
+unbacktick <- function(x) {
+  x <- gsub("\n```", "", x)
+  x <- gsub("```\n", "", x)
+  x <- gsub("```", "", x)
+  x
+}
